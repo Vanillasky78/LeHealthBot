@@ -3,17 +3,17 @@ from chatbot.user_profile import UserProfile
 import pandas as pd
 import os
 
-class FatLossChatBot(ChatbotBase):
+class LeHealthBot(ChatbotBase):  
     def __init__(self):
         self.user_profile = None
-        self.state = 'INIT'  # INIT, ASKED_FATTY_HISTORY, ASKED_GENDER, ASKED_WEIGHT, ASKED_TARGET, READY
+        self.state = 'INIT'
         self.meal_queue = []
         self.fatty_liver_risk = None
         try:
             base_dir = os.path.dirname(os.path.abspath(__file__))
             csv_path = os.path.join(base_dir, "..", "data", "food_plans_500_en.csv")
             self.food_df = pd.read_csv(csv_path)
-        except:
+        except Exception:
             self.food_df = pd.DataFrame()
 
     def classify_meal_risk(self, ingredients: str) -> str:
