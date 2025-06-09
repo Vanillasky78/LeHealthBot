@@ -6,7 +6,9 @@ import os
 class FatLossChatBot(ChatbotBase):
     def __init__(self):
         self.user_profile = None
-        self.state = 'INIT'  # INIT, ASKED_WEIGHT, ASKED_TARGET
+        self.state = 'INIT'  # INIT, ASKED_FATTY_HISTORY, ASKED_GENDER, ASKED_WEIGHT, ASKED_TARGET, READY
+        self.meal_queue = []
+        self.fatty_liver_risk = None
         try:
             base_dir = os.path.dirname(os.path.abspath(__file__))
             csv_path = os.path.join(base_dir, "..", "data", "food_plans_500_en.csv")
@@ -14,27 +16,50 @@ class FatLossChatBot(ChatbotBase):
         except:
             self.food_df = pd.DataFrame()
 
+    def classify_meal_risk(self, ingredients: str) -> str:
+        ingredients = ingredients.lower()
+        sugar_keywords = ['honey', 'sugar', 'syrup']
+        fry_keywords = ['fried', 'deep-fried', 'battered']
+
+        has_sugar = any(kw in ingredients for kw in sugar_keywords)
+        has_fried = any(kw in ingredients for kw in fry_keywords)
+
+        if has_sugar and has_fried:
+            return "🔴 High Risk: Sugar + Fried"
+        elif has_sugar or has_fried:
+            return "🟠 Moderate Risk: Sugar or Fried"
+        else:
+            return "🟢 Low Risk"
+
     def generate_response(self, user_input: str) -> str:
         if self.state == 'INIT':
+            self.state = 'ASKED_FATTY_HISTORY'
+            return "🩺 Have you ever been told you have fatty liver in a medical check-up? (yes/no)"
+
+        if self.state == 'ASKED_FATTY_HISTORY':
+            answer = user_input.strip().lower()
+            if answer not in ['yes', 'no']:
+                return "❓ Please answer 'yes' or 'no'."
+            self.fatty_liver_risk = (answer == 'yes')
             self.state = 'ASKED_GENDER'
-            return "Welcome to LeHealthBot! Please enter your gender (male/female):"
+            return "👤 Please enter your gender (male/female):"
 
         if self.state == 'ASKED_GENDER':
             gender = user_input.strip().lower()
             if gender not in ['male', 'female']:
-                return "Please enter 'male' or 'female':"
+                return "❓ Please enter 'male' or 'female':"
             self.temp_gender = gender
             self.state = 'ASKED_WEIGHT'
-            return "Please enter your current weight (kg):"
+            return "⚖️ Please enter your current weight (kg):"
 
         if self.state == 'ASKED_WEIGHT':
             try:
                 weight = float(user_input)
                 self.temp_current_weight = weight
                 self.state = 'ASKED_TARGET'
-                return "Please enter your target weight (kg):"
+                return "🎯 Please enter your target weight (kg):"
             except:
-                return "Please enter a valid number for weight."
+                return "❗ Please enter a valid number for weight."
 
         if self.state == 'ASKED_TARGET':
             try:
@@ -42,21 +67,33 @@ class FatLossChatBot(ChatbotBase):
                 self.user_profile = UserProfile(self.temp_gender, self.temp_current_weight, target)
                 self.state = 'READY'
                 kcal = self.user_profile.recommend_calorie_intake()
-                return f"✅ Profile set! You aim to lose {self.user_profile.loss_needed:.1f} kg. Recommended daily intake: {kcal:.0f} kcal. Would you like meal suggestions for today?"
+                message = f"✅ Profile set! You aim to lose {self.user_profile.loss_needed:.1f} kg. Recommended daily intake: {kcal:.0f} kcal."
+                if self.fatty_liver_risk:
+                    message += "\n⚠️ Since you've indicated fatty liver history, we suggest minimizing sugar and fried food intake."
+                message += "\nClick below to receive today's personalized meal recommendation."
+                return message
             except:
-                return "Please enter a valid target weight (kg)."
+                return "❗ Please enter a valid target weight (kg)."
 
         if self.state == 'READY':
             if not self.food_df.empty:
-                kcal = self.user_profile.recommend_calorie_intake()
-                filtered = self.food_df[self.food_df["calories"] <= kcal].sample(n=3, replace=True)
-                response = "🍽️ Here are your recommended meals for today:\n"
-                for i, row in filtered.iterrows():
-                    response += f"{i+1}. {row['title']} ({row['calories']} kcal)\n"
-                    response += f"   Ingredients: {row['ingredients']}\n"
-                    response += f"   Instructions: {row['instructions']}\n\n"
+                if not self.meal_queue:
+                    kcal = self.user_profile.recommend_calorie_intake()
+                    filtered = self.food_df[self.food_df["calories"] <= kcal].sample(n=3, replace=True)
+                    self.meal_queue = filtered.to_dict(orient='records')
+                meal = self.meal_queue.pop(0)
+                risk_level = self.classify_meal_risk(meal['ingredients']) if self.fatty_liver_risk else ""
+                response = f"🍽️ Today's recommendation:\n"
+                response += f"**{meal['title']}** ({meal['calories']} kcal)\n"
+                response += f"{risk_level}\n"
+                response += f"**Ingredients:** {meal['ingredients']}\n"
+                response += f"**Instructions:** {meal['instructions']}"
+                if not self.meal_queue:
+                    response += "\n✅ That's all for today. Stay consistent and check back tomorrow!"
+                else:
+                    response += "\n➡️ Click again for the next suggestion."
                 return response.strip()
             else:
                 return "⚠️ Unable to load meal data. Please try again later."
 
-        return "I didn't understand that. Could you please try again?"
+        return "❓ I didn't understand that. Could you please try again?"
