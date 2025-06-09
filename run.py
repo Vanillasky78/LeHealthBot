@@ -1,13 +1,13 @@
-from chatbot.personal_chatbot import FatLossChatBot
+from chatbot.personal_chatbot import LeHealthBot
 
 def main():
-    bot = FatLossChatBot()
-    print("🤖 LeHealthBot: Hi! I'm your personalized fat-loss assistant.")
+    bot = LeHealthBot()
+    print("🤖 LeHealthBot: Hello! I'm your personalized fat-loss assistant.")
 
     while True:
         user_input = input("You: ")
-        if user_input.lower() in ["quit", "exit", "bye", "goodbye"]:
-            print("Goodbye! Stay healthy and motivated! 💪")
+        if user_input.lower() in ["exit", "quit", "bye"]:
+            print("👋 Goodbye! Stay healthy!")
             break
         response = bot.generate_response(user_input)
         print("🤖 LeHealthBot:", response)
