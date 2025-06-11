@@ -8,13 +8,18 @@ st.markdown("Welcome to your personalized fat-loss meal recommender!")
 # Initialize bot
 if "bot" not in st.session_state:
     st.session_state.bot = LeHealthBot()
+if "recommend_count" not in st.session_state:
+    st.session_state.recommend_count = 0
+if "response" not in st.session_state:
+    st.session_state.response = ""
+
 bot = st.session_state.bot
 
 # UI interaction
 if bot.state == "INIT":
     st.write(bot.generate_response(""))
 
-if bot.state == "ASKED_FATTY_HISTORY":
+elif bot.state == "ASKED_FATTY_HISTORY":
     fatty_history = st.radio("🩺 Have you ever been told you have fatty liver in a check-up?", ["yes", "no"])
     if st.button("Confirm"):
         st.write(bot.generate_response(fatty_history))
@@ -39,5 +44,17 @@ elif bot.state == "ASKED_TARGET":
         st.rerun()
 
 elif bot.state == "READY":
-    if st.button("📋 Get today's meal recommendation"):
-        st.markdown(bot.generate_response("next"))
+    if st.session_state.recommend_count < 3:
+        if st.button("📋 Get today's meal recommendation"):
+            st.session_state.response = bot.generate_response("next")
+            st.session_state.recommend_count += 1
+            st.rerun()
+
+        if st.session_state.response:
+            st.markdown(st.session_state.response)
+    else:
+        st.success("✅ All recommendations shown.")
+        if st.button("🔁 Restart"):
+            for key in ["bot", "recommend_count", "response"]:
+                st.session_state.pop(key, None)
+            st.rerun()
