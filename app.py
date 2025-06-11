@@ -2,10 +2,8 @@ import streamlit as st
 from chatbot.personal_chatbot import LeHealthBot
 
 st.set_page_config(page_title="LeHealthBot", page_icon="🥗")
-
-# Header
-st.title("🥗 LeHealthBot")
-st.subheader("Your personalized fat-loss meal recommender")
+st.markdown("<h1 style='font-size:48px;'>🥗 LeHealthBot</h1>", unsafe_allow_html=True)
+st.markdown("<h3 style='color:gray;'>Your personalized fat-loss meal recommender</h3>", unsafe_allow_html=True)
 st.markdown("---")
 
 # Initialize session state
@@ -16,65 +14,66 @@ if "bot" not in st.session_state:
 
 bot = st.session_state.bot
 
-# Show last chatbot response (if any)
-if st.session_state.response:
+# ✅ Only show chatbot response during meal recommendation stage
+if bot.state == "READY" and st.session_state.response:
     st.markdown(st.session_state.response)
 
-# === Step 1: INIT → Trigger bot start ===
+# 🩺 Step 1: Ask about fatty liver history
 if bot.state == "INIT":
     st.session_state.response = bot.generate_response("")
     st.rerun()
 
-# === Step 2: Fatty Liver History ===
 elif bot.state == "ASKED_FATTY_HISTORY":
-    st.markdown("### 🩺 Step 1: Fatty Liver History")
-    st.markdown("Have you ever been told you have **fatty liver** in a medical check-up?")
-    fatty_history = st.radio("", ["yes", "no"], key="fatty_history")
+    st.subheader("🩺 Step 1: Fatty Liver History")
+    fatty_history = st.radio(
+        "Have you ever been told you have fatty liver in a medical check-up?",
+        ["yes", "no"], key="fatty_history"
+    )
     if st.button("✅ Confirm fatty liver history"):
         st.session_state.response = bot.generate_response(fatty_history)
         st.rerun()
 
-# === Step 3: Gender ===
+# 👤 Step 2: Gender
 elif bot.state == "ASKED_GENDER":
-    st.markdown("### 👤 Step 2: Gender")
-    st.markdown("Please select your gender:")
-    gender = st.radio("", ["male", "female"], key="gender")
+    st.subheader("👤 Step 2: Gender")
+    gender = st.radio("Please select your gender:", ["male", "female"], key="gender")
     if st.button("✅ Confirm gender"):
         st.session_state.response = bot.generate_response(gender)
         st.rerun()
 
-# === Step 4: Current Weight ===
+# ⚖️ Step 3: Weight
 elif bot.state == "ASKED_WEIGHT":
-    st.markdown("### ⚖️ Step 3: Current Weight")
-    st.markdown("Please enter your **current weight** (kg):")
-    weight = st.number_input("", min_value=30.0, max_value=200.0, key="weight")
+    st.subheader("⚖️ Step 3: Current Weight")
+    weight = st.number_input(
+        "Please enter your current weight (kg):", min_value=30.0, max_value=200.0, key="weight"
+    )
     if st.button("✅ Confirm current weight"):
         st.session_state.response = bot.generate_response(str(weight))
         st.rerun()
 
-# === Step 5: Target Weight ===
+# 🎯 Step 4: Target Weight
 elif bot.state == "ASKED_TARGET":
-    st.markdown("### 🎯 Step 4: Target Weight")
-    st.markdown("Please enter your **target weight** (kg):")
-    target = st.number_input("", min_value=30.0, max_value=200.0, key="target")
+    st.subheader("🎯 Step 4: Target Weight")
+    target = st.number_input(
+        "Please enter your target weight (kg):", min_value=30.0, max_value=200.0, key="target"
+    )
     if st.button("✅ Confirm target weight"):
         st.session_state.response = bot.generate_response(str(target))
         st.rerun()
 
-# === Step 6: Recommend Meals ===
+# 🍽️ Step 5: Recommend Meals
 elif bot.state == "READY":
     max_recommendations = 3
-
-    st.markdown("### 🍽️ Today's Meal Recommendation")
+    st.subheader("🍽️ Step 5: Personalized Meal Recommendation")
+    st.progress(st.session_state.progress / max_recommendations)
 
     if st.session_state.progress < max_recommendations:
-        st.markdown(f"**Progress:** {st.session_state.progress} / {max_recommendations}")
-        if st.button("📋 Get recommendation"):
+        if st.button("📋 Get today's meal recommendation"):
             st.session_state.response = bot.generate_response("next")
             st.session_state.progress += 1
             st.rerun()
     else:
-        st.success("✅ You've seen all 3 recommendations for today!")
+        st.success("✅ You've received all recommendations for today!")
         if st.button("🔄 Start Over"):
             for key in ["bot", "response", "progress"]:
                 if key in st.session_state:
