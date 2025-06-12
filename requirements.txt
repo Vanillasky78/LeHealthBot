@@ -1,6 +1,3 @@
-pandas
-streamlit
-
-conda activate nlp
-cd ~/Documents/GitHub/LeHealthBot
-streamlit run app.py
+streamlit>=1.25.0
+pandas>=1.3.0
+python-dotenv>=1.0.0
