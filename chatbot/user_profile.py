@@ -9,8 +9,9 @@ class UserProfile:
 
     def recommend_calorie_intake(self) -> float:
         base = DEFAULT_CALORIES["base"]
-        if self.gender == 'male':
+        if self.gender.lower() == "male":
             base += DEFAULT_CALORIES["male_bonus"]
         if self.loss_needed > 0:
             base -= self.loss_needed * DEFAULT_CALORIES["loss_penalty_per_kg"]
         return max(base, DEFAULT_CALORIES["min"])
+

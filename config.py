@@ -10,3 +10,10 @@ RISK_COLORS = {
     'moderate': "🟠 Moderate Risk: Sugar or Fried",
     'low': "🟢 Low Risk"
 }
+
+DEFAULT_CALORIES = {
+    "base": 1800,
+    "male_bonus": 200,
+    "loss_penalty_per_kg": 20,
+    "min": 1200
+}
