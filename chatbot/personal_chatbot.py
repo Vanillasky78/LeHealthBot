@@ -1,9 +1,16 @@
 from chatbot.base import ChatbotBase
 from chatbot.user_profile import UserProfile
+from config import SUGAR_KEYWORDS, FRY_KEYWORDS, DEFAULT_CALORIES
 import pandas as pd
 import os
 
-class LeHealthBot(ChatbotBase):  
+class LeHealthBot(ChatbotBase):
+    """
+    LeHealthBot is a personalized chatbot for fat-loss meal recommendation.
+    It guides the user through health screening and provides calorie-appropriate
+    food suggestions with risk classification based on sugar and fried ingredients.
+    """
+
     def __init__(self):
         self.user_profile = None
         self.state = 'INIT'
@@ -17,12 +24,10 @@ class LeHealthBot(ChatbotBase):
             self.food_df = pd.DataFrame()
 
     def classify_meal_risk(self, ingredients: str) -> str:
+        """Classify meal risk based on presence of sugar or fried keywords."""
         ingredients = ingredients.lower()
-        sugar_keywords = ['honey', 'sugar', 'syrup']
-        fry_keywords = ['fried', 'deep-fried', 'battered']
-
-        has_sugar = any(kw in ingredients for kw in sugar_keywords)
-        has_fried = any(kw in ingredients for kw in fry_keywords)
+        has_sugar = any(kw in ingredients for kw in SUGAR_KEYWORDS)
+        has_fried = any(kw in ingredients for kw in FRY_KEYWORDS)
 
         if has_sugar and has_fried:
             return "🔴 High Risk: Sugar + Fried"

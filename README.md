@@ -1,8 +1,12 @@
 # 🥗 LeHealthBot
 
-**LeHealthBot** is a personalized meal recommendation assistant designed to support individuals—especially those with or at risk of fatty liver disease—in managing daily calorie intake and reducing high-risk foods such as sugar and fried items.
+[![Python](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/)
+[![Streamlit](https://img.shields.io/badge/Streamlit-UI-red)](https://streamlit.io/)
+[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-It works through a friendly **chatbot interface** available in both **CLI** and **Streamlit UI** modes.
+**LeHealthBot** is a personalized meal recommendation assistant designed to support individuals—especially those with or at risk of **fatty liver disease**—in managing daily calorie intake and avoiding high-risk foods like **sugar** and **fried items**.
+
+It provides a friendly **chatbot interface** available in both **CLI** (terminal) and **Streamlit UI** (browser).
 
 ---
 
@@ -11,21 +15,22 @@ It works through a friendly **chatbot interface** available in both **CLI** and 
 - 🔢 **Personalized calorie intake calculation**  
   Based on gender, current weight, and target weight.
 
-- 💬 **Conversational interaction**  
-  Step-by-step chatbot for both command-line and visual UI.
+- 💬 **Conversational chatbot interaction**  
+  Step-by-step health assistant available via command-line or Streamlit.
 
 - 🩺 **Fatty liver awareness screening**  
-  Custom prompts and dietary risk control.
+  Custom prompts to flag potential dietary risks.
 
-- 🧠 **Food filtering based on risk classification**
-  - 🔴 High Risk: Sugar + Fried
-  - 🟠 Moderate Risk: Sugar or Fried
+- 🧠 **Food filtering based on risk classification**  
+  - 🔴 High Risk: Sugar + Fried  
+  - 🟠 Moderate Risk: Sugar or Fried  
   - 🟢 Low Risk: Healthy
 
-- 📂 **Local food dataset** (500+ meals)
+- 📂 **Local food dataset** (500+ meals)  
+  Curated and stored locally, no internet needed.
 
 - 🔄 **Streamlit version with progress control**  
-  One-by-one suggestion flow with restart option.
+  One-by-one meal suggestion flow with restart button and step markers.
 
 ---
 
@@ -35,14 +40,17 @@ It works through a friendly **chatbot interface** available in both **CLI** and 
 LeHealthBot/
 ├── chatbot/
 │   ├── base.py               # Abstract chatbot base class
-│   ├── personal_chatbot.py   # LeHealthBot chatbot logic
-│   └── user_profile.py       # Calorie calculation engine
+│   ├── personal_chatbot.py   # LeHealthBot logic + state
+│   └── user_profile.py       # Calorie calculation logic
 ├── data/
-│   └── food_plans_500_en.csv # 500+ food plans
-├── app.py                    # Streamlit app (GUI)
-├── run.py                    # CLI chatbot
+│   └── food_plans_500_en.csv # 500+ meals data
+├── tests/
+│   └── test_user_profile.py  # Unit tests for calorie logic
+├── config.py                 # Central config (keywords, thresholds)
+├── app.py                    # Streamlit interface
+├── run.py                    # Command-line chatbot interface
 ├── requirements.txt          # Python dependencies
-└── README.md                 # 📄 You're here!
+└── README.md                 # You are here!
 ```
 
 ---
@@ -60,9 +68,9 @@ LeHealthBot/
 git clone https://github.com/Vanillasky78/LeHealthBot.git
 cd LeHealthBot
 
-# Optional: Create virtual environment
+# Optional: create a virtual environment
 python -m venv venv
-source venv/bin/activate  # or venv\Scripts\activate on Windows
+source venv/bin/activate  # on Windows: venv\Scripts\activate
 
 # Install dependencies
 pip install -r requirements.txt
@@ -72,60 +80,66 @@ pip install -r requirements.txt
 
 ## ▶️ How to Use
 
-### CLI Version (Terminal)
+### 💻 CLI Mode (Terminal)
 
 ```bash
 python run.py
 ```
 
-You’ll be guided to enter:
+You will be guided through:
 
-- Fatty liver history
-- Gender
-- Current + Target weight
-- Receive 3 personalized food suggestions
+- 🩺 Fatty liver history screening  
+- 👤 Gender selection  
+- ⚖️ Current & target weight input  
+- 🍽️ 3 personalized meal suggestions with calorie + risk level
 
 ---
 
-### Streamlit UI Version (Browser)
+### 🌐 Streamlit Mode (Browser)
 
 ```bash
 streamlit run app.py
 ```
 
-The web UI includes:
+Features in browser UI:
 
-- 👣 Page-by-page chatbot flow
-- ✅ Confirm buttons at each step
-- 📊 Progress tracking + restart option
-- 🟡 Risk icons for each suggestion
+- 👣 Page-by-page guided interaction
+- ✅ Confirm buttons for each step
+- 📊 Progress bar & restart option
+- 🟡 Risk badges displayed with each meal
 
 ---
 
 ## ✅ Sample Flow
 
-1. User chooses: Yes to fatty liver history  
-2. Selects gender: Male  
-3. Current: 85kg, Target: 75kg  
-4. Recommender suggests 3 meals:
-   - Each with calorie total, ingredients, instructions  
-   - Shows colored risk badge: 🔴 / 🟠 / 🟢  
+```
+🩺 → 👤 → ⚖️ → 🎯 → 🍽️ → ✅
+```
+
+1. User answers: ✅ Yes to fatty liver history  
+2. Selects gender: 👨 Male  
+3. Inputs: ⚖️ Current: 85kg, 🎯 Target: 75kg  
+4. Receives 3 meal suggestions:
+   - 🔢 Calorie total  
+   - 🍲 Ingredients  
+   - 📋 Instructions  
+   - 🛑 Risk badge: 🔴 / 🟠 / 🟢
 
 ---
 
 ## 🔐 Privacy & Ethics
 
-- LeHealthBot runs 100% locally  
-- No personal data is stored or transmitted  
-- Risk classification is rule-based (no medical diagnosis)  
-- Open-source, non-commercial research use only  
+- ✅ **Runs 100% locally** — no internet or cloud required  
+- ✅ **No personal data is stored or transmitted**  
+- ✅ **Risk rules are rule-based, not medical diagnosis**  
+- ✅ **Open-source, non-commercial research only**
 
 ---
 
 ## 📌 Upgrade Ideas
 
 - ☐ Add BMI classification  
-- ☐ User session memory  
+- ☐ User session memory across restarts  
 - ☐ Export PDF meal plans  
 - ☐ Multi-language support  
-- ☐ Voice command integration  
+- ☐ Voice command input
