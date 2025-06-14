@@ -1,40 +1,40 @@
-# 🥗 LeHealthBot
+# LeHealthBot
 
 [![Python](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/)
 [![Streamlit](https://img.shields.io/badge/Streamlit-UI-red)](https://streamlit.io/)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
-**LeHealthBot** is a personalized meal recommendation assistant designed to support individuals—especially those with or at risk of **fatty liver disease**—in managing daily calorie intake and avoiding high-risk foods like **sugar** and **fried items**.
+**LeHealthBot** is a personalized meal recommendation assistant designed to support individuals—especially those with or at risk of fatty liver disease—in managing daily calorie intake and avoiding high-risk foods like sugar and fried items.
 
-It provides a friendly **chatbot interface** available in both **CLI** (terminal) and **Streamlit UI** (browser).
+It provides a friendly chatbot interface available in both CLI (terminal) and Streamlit UI (browser).
 
 ---
 
-## ✨ Features
+## Features
 
-- 🔢 **Personalized calorie intake calculation**  
+- **Personalized calorie intake calculation**  
   Based on gender, current weight, and target weight.
 
-- 💬 **Conversational chatbot interaction**  
+- **Conversational chatbot interaction**  
   Step-by-step health assistant available via command-line or Streamlit.
 
-- 🩺 **Fatty liver awareness screening**  
+- **Fatty liver awareness screening**  
   Custom prompts to flag potential dietary risks.
 
-- 🧠 **Food filtering based on risk classification**  
-  - 🔴 High Risk: Sugar + Fried  
-  - 🟠 Moderate Risk: Sugar or Fried  
-  - 🟢 Low Risk: Healthy
+- **Food filtering based on risk classification**  
+  - High Risk: Sugar + Fried  
+  - Moderate Risk: Sugar or Fried  
+  - Low Risk: Healthy
 
-- 📂 **Local food dataset** (500+ meals)  
+- **Local food dataset** (500+ meals)  
   Curated and stored locally, no internet needed.
 
-- 🔄 **Streamlit version with progress control**  
+- **Streamlit version with progress control**  
   One-by-one meal suggestion flow with restart button and step markers.
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 LeHealthBot/
@@ -55,14 +55,14 @@ LeHealthBot/
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
-### 🛠 Requirements
+### Requirements
 
 - Python 3.8+
 - pip
 
-### 📦 Installation
+### Installation
 
 ```bash
 git clone https://github.com/Vanillasky78/LeHealthBot.git
@@ -78,9 +78,9 @@ pip install -r requirements.txt
 
 ---
 
-## ▶️ How to Use
+## How to Use
 
-### 💻 CLI Mode (Terminal)
+### CLI Mode (Terminal)
 
 ```bash
 python run.py
@@ -88,58 +88,75 @@ python run.py
 
 You will be guided through:
 
-- 🩺 Fatty liver history screening  
-- 👤 Gender selection  
-- ⚖️ Current & target weight input  
-- 🍽️ 3 personalized meal suggestions with calorie + risk level
+- Fatty liver history screening  
+- Gender selection  
+- Current & target weight input  
+- 3 personalized meal suggestions with calorie + risk level
 
 ---
 
-### 🌐 Streamlit Mode (Browser)
+### Streamlit Mode (Browser)
 
 ```bash
 streamlit run app.py
 ```
 
-Features in browser UI:
+Streamlit UI includes:
 
-- 👣 Page-by-page guided interaction
-- ✅ Confirm buttons for each step
-- 📊 Progress bar & restart option
-- 🟡 Risk badges displayed with each meal
+- Page-by-page guided interaction
+- Confirm buttons for each step
+- Progress bar and restart option
+- Risk badges displayed with each meal
 
 ---
 
-## ✅ Sample Flow
+## Sample Flow
 
-```
-🩺 → 👤 → ⚖️ → 🎯 → 🍽️ → ✅
-```
-
-1. User answers: ✅ Yes to fatty liver history  
-2. Selects gender: 👨 Male  
-3. Inputs: ⚖️ Current: 85kg, 🎯 Target: 75kg  
+1. User answers: Yes to fatty liver history  
+2. Selects gender: Male  
+3. Inputs: Current: 85kg, Target: 75kg  
 4. Receives 3 meal suggestions:
-   - 🔢 Calorie total  
-   - 🍲 Ingredients  
-   - 📋 Instructions  
-   - 🛑 Risk badge: 🔴 / 🟠 / 🟢
+   - Calorie total  
+   - Ingredients  
+   - Instructions  
+   - Risk badge: High / Moderate / Low
 
 ---
 
-## 🔐 Privacy & Ethics
+## Run Unit Tests
 
-- ✅ **Runs 100% locally** — no internet or cloud required  
-- ✅ **No personal data is stored or transmitted**  
-- ✅ **Risk rules are rule-based, not medical diagnosis**  
-- ✅ **Open-source, non-commercial research only**
+This project includes unit tests for calorie recommendation logic.
+
+### To run tests:
+
+```bash
+# Activate environment
+conda activate nlp
+
+# Navigate to project root
+cd ~/Documents/GitHub/LeHealthBot
+
+# Run tests with proper import path
+PYTHONPATH=. pytest
+```
+
+> Note: `PYTHONPATH=.` is required to correctly import modules like `from chatbot.user_profile import UserProfile`.
 
 ---
 
-## 📌 Upgrade Ideas
+## Privacy & Ethics
 
-- ☐ Add BMI classification  
-- ☐ User session memory across restarts  
-- ☐ Export PDF meal plans  
-- ☐ Multi-language support  
-- ☐ Voice command input
+- Runs 100% locally — no internet or cloud required  
+- No personal data is stored or transmitted  
+- Risk classification is rule-based and not a medical diagnosis  
+- Open-source, non-commercial academic/research use only
+
+---
+
+## Upgrade Ideas
+
+- [ ] Add BMI classification  
+- [ ] User session memory across restarts  
+- [ ] Export PDF meal plans  
+- [ ] Multi-language support  
+- [ ] Voice command input
